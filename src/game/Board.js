@@ -16,7 +16,7 @@ class Tile extends React.Component {
     }
 }
 
-class Board extends React.Component {
+export class Board extends React.Component {
 
     constructor(props){
         
@@ -40,14 +40,14 @@ class Board extends React.Component {
                 <Tile 
                     key={'stage-'+this.props.stage +'-item-' + step}
                     title={title}
-                    isSelected={this.state.selected === step}
-                    onClick={() => this.selectTile(step)}
+                    isSelected={this.props.selected === step}
+                    onClick={() => this.props.onClick(step)}
                 /> 
             )
         }) : 'No Tiles for Stage';
 
         return (
-            <div className="board">
+            <div className="board generic">
                 { tiles }
             </div>
         );
@@ -55,4 +55,64 @@ class Board extends React.Component {
 
 }
 
-export default Board;
+
+export class SummaryBoard extends React.Component {
+
+    constructor(props){
+        
+        super(props);
+        this.state = {
+            selected: props.selected
+        };
+
+    }
+
+    render(){
+        
+        const tiles = this.state.selected ? Object.keys(this.state.selected).map((stage, key) => {
+            const item  = this.state.selected[stage];
+            return (
+                <Tile 
+                    key={'stage-'+this.props.stage +'-item-' + key}
+                    title={this.props.stages[stage].tiles[item]}
+                    onClick={()=>{}}
+                /> 
+            )
+        }) : 'No Items Selected';
+
+        return (
+            <div className="board board-summary">
+                { tiles }
+            </div>
+        );
+    }
+
+}
+
+
+export class IntroBoard extends React.Component {
+
+    render(){
+
+        return (
+            <div className="board board-intro">
+                Привет! Это игра
+            </div>
+        );
+    }
+
+}
+
+
+export class ResultsBoard extends React.Component {
+
+    render(){
+
+        return (
+            <div className="board board-results">
+                Ты выиграл или проиграл
+            </div>
+        );
+    }
+
+}

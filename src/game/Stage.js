@@ -1,5 +1,5 @@
 import React from 'react';
-import Board  from './Board';
+import {Board, SummaryBoard, IntroBoard, ResultsBoard}  from './Board';
 
 
 const stages = {
@@ -68,8 +68,18 @@ class Stage extends React.Component {
         this.state = {
             stage: 0,
             title: 'Stage',
-            stageObject: null
+            stageObject: null,
+            selected: {}
         }
+    }
+
+    selectItem(item){
+
+        console.log('Save Stage Data', item)
+
+        const selected = this.state.selected;
+        selected[this.state.stage] = item;
+        this.setState({selected: selected});
     }
 
     getStageData(stage){
@@ -84,14 +94,14 @@ class Stage extends React.Component {
     nextStage(){
 
         var stage = this.state.stage + 1;
-        if(stage === 5){
+        if(stage > 5){
             stage = 0;
+            this.setState({selected: {}});
         }
 
         this.setState({stage: stage, stageObject: this.getStageData(stage)});
 
     }
-
 
     previousStage(){
 
@@ -108,15 +118,42 @@ class Stage extends React.Component {
 
         const stage = this.getStageData(this.state.stage);
         
+        let board;
+
+        if(this.state.stage === 0) {
+            board = <IntroBoard 
+                key={'stage-'+this.state.stage}
+                stage={this.state.stage}
+            />
+        } else if(this.state.stage === 4) {
+            board = <SummaryBoard 
+                key={'stage-'+this.state.stage}
+                stage={this.state.stage}
+                stages={stages}
+                selected={this.state.selected}
+            />
+        } else if(this.state.stage === 5) {
+            board = <ResultsBoard 
+                key={'stage-'+this.state.stage}
+                stage={this.state.stage}
+            />
+        } else {
+            board = <Board 
+                key={'stage-'+this.state.stage}
+                stage={this.state.stage}
+                tiles={stage.tiles}
+                onClick={i => this.selectItem(i)}
+                selected={this.state.stage in this.state.selected ? this.state.selected[this.state.stage] : null}
+            />
+        }
+
         return ( stage ? 
             <div className="game">
                 {this.state.stage > 0 && this.state.stage < 5 ? <button className="back" onClick={() => this.previousStage()}></button> : '' }
                 <h2 className="title">{stage.title}</h2>
-                <Board 
-                    key={'stage-'+this.state.stage}
-                    stage={this.state.stage}
-                    tiles={stage.tiles} 
-                />
+
+                { board }
+
                 { 
                 stage.button ? 
                     <div className="container-button">

@@ -47,12 +47,24 @@ button {
   margin: 40px 0;
   
 }
+
 .board .tile {
   aspect-ratio: 1;
   padding: 4px;
   border: 1px solid #e0e0e0;
   cursor: pointer;
 }
+
+.board.board-summary {
+  grid-template-columns: 1fr;
+}
+
+.board.board-summary .tile {
+  aspect-ratio: 0;
+  padding: 12px;
+}
+
+
 .board .tile.selected {
   background: chocolate;
 }
